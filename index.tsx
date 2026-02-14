@@ -9,101 +9,151 @@ const PROFILES = [
         id: 'sleep',
         title: 'Derin Uyku',
         subtitle: '4-7-8 Protokolü',
-        description: 'Vücudu "kapatma" komutu. NASA astronotlarının uyku öncesi rutini. Uykusuzluk tarihe karışacak.',
+        description: 'Vücudu "kapatma" komutu. NASA astronotlarının uyku öncesi rutini.',
         color: '#4338ca', // Indigo 700
         secondaryColor: '#6366f1', // Indigo 500
         accentColor: '#312e81', // Indigo 900
         pattern: { inhale: 4000, holdIn: 7000, exhale: 8000, holdOut: 0 },
+        details: {
+            scientific: "Parasempatik sinir sistemini aktive eden en güçlü ritmik sakinleştiricidir. 8 saniyelik uzun nefes veriş, vagus sinirini uyararak kalp atış hızını düşürür ve kan basıncını dengeler.",
+            who: "NASA astronotları, uykusuzluk (insomnia) çekenler ve yüksek anksiyete yaşayanlar.",
+            benefits: "Melatonin salgısını destekler, uykuya geçiş süresini kısaltır ve gece uyanmalarını azaltır."
+        }
     },
     {
         id: 'vagus',
         title: 'Vagus Masajı',
         subtitle: 'Biyolojik Fren',
-        description: 'Otonom sinir sistemine "Acil durum bitti" emri. Vagus sinirini uyararak kalp atışını yavaşlatır ve kortizolü temizler.',
+        description: 'Otonom sinir sistemine "Acil durum bitti" emri veren biyolojik komut.',
         color: '#0d9488', // Teal 600
         secondaryColor: '#5eead4', // Teal 300
         accentColor: '#134e4a', // Teal 900
         pattern: { inhale: 4000, holdIn: 0, exhale: 8000, holdOut: 0 },
+        details: {
+            scientific: "Bu teknik 1:2 Altın Oranı'na dayanır. Nefes verme süresi alma süresinin iki katı olduğunda, göğüs içi basınç değişimi Vagus sinirini mekanik olarak uyarır ve kalbe asetilkolin salgılatarak 'yavaşla' komutu verir.",
+            who: "Kronik stres altındaki yöneticiler, öfke kontrolü sorunu yaşayanlar ve sindirim problemi olanlar.",
+            benefits: "Kortizol (stres hormonu) seviyesini dakikalar içinde düşürür, HRV'yi (Kalp Hızı Değişkenliği) artırır ve sindirimi başlatır."
+        }
     },
     {
         id: 'zen',
         title: 'Zen Transı',
         subtitle: 'Zihinsel Susturucu',
-        description: 'Beyin dalgalarını yavaşlatır. Kan gazı dengesini manipüle ederek zihni "Düşüncesizlik" (trans) moduna alır.',
+        description: 'Beyin dalgalarını yavaşlatarak zihni trans moduna alır.',
         color: '#db2777', // Pink 600
         secondaryColor: '#f472b6', // Pink 400
         accentColor: '#831843', // Pink 900
         pattern: { inhale: 4000, holdIn: 4000, exhale: 8000, holdOut: 0 },
+        details: {
+            scientific: "Kan gazı dengesini (O2/CO2) manipüle eder. 4 saniye tutma oksijen transferini maksimize ederken, 8 saniye veriş beyin dalgalarını Beta'dan (aktif) Alfa ve Teta'ya (meditatif) çeker.",
+            who: "Meditasyon yapanlar, 'Overthinking' (aşırı düşünme) kurbanları ve odaklanma sorunu yaşayanlar.",
+            benefits: "Zihinsel gevezeliği susturur, derin bir iç huzur sağlar ve yaratıcı düşünceyi tetikler."
+        }
     },
     {
         id: 'focus',
         title: 'Navy SEALs',
         subtitle: 'Kutu Nefesi',
-        description: 'Elit askerlerin çatışma anında nabzını düşürmek ve %100 odaklanmak için kullandığı gizli silah.',
+        description: 'Elit askerlerin çatışma anında odaklanmak için kullandığı yöntem.',
         color: '#0284c7', // Sky 600
         secondaryColor: '#38bdf8', // Sky 400
         accentColor: '#0c4a6e', // Sky 900
         pattern: { inhale: 4000, holdIn: 4000, exhale: 4000, holdOut: 4000 },
+        details: {
+            scientific: "Dört eşit parçadan oluşan bu ritim, otonom sinir sistemini (Sempatik ve Parasempatik) mükemmel bir dengeye getirir. Kandaki CO2 seviyesini stabilize ederek beyne giden kan akışını optimize eder.",
+            who: "Özel kuvvetler (Navy SEALs), cerrahlar, pilotlar ve kriz yöneten profesyoneller.",
+            benefits: "Panik anında soğukkanlı kalmayı sağlar, odaklanmayı %100'e çıkarır ve karar verme yeteneğini keskinleştirir."
+        }
     },
     {
         id: 'voltage',
         title: 'Yüksek Voltaj',
         subtitle: '6-2 Güç Döngüsü',
-        description: 'Kafeinsiz enerji patlaması. Hızlı boşaltım ve derin dolum ile sinir sistemini elektriklendir.',
+        description: 'Kafeinsiz enerji patlaması ve sinir sistemi aktivasyonu.',
         color: '#eab308', // Yellow 600
         secondaryColor: '#facc15', // Yellow 400
         accentColor: '#854d0e', // Yellow 800
         pattern: { inhale: 6000, holdIn: 0, exhale: 2000, holdOut: 0 },
+        details: {
+            scientific: "Kontrollü hiperventilasyon benzeri bir etki yaratır. Hızlı ve güçlü nefes alışlar sempatik sistemi (Savaş/Kaç) geçici olarak uyararak adrenalin ve noradrenalin salınımını tetikler.",
+            who: "Sporcular, sabah uyanmakta zorlananlar ve gün ortasında enerji düşüşü yaşayanlar.",
+            benefits: "Kafeine ihtiyaç duymadan anında enerji sağlar, zihinsel sisi dağıtır ve fiziksel performansı artırır."
+        }
     },
     {
         id: 'panic',
         title: 'Panik Reset',
         subtitle: '7-11 Tekniği',
-        description: 'Biyolojik "Acil Durum" butonu. Parasempatik sistemi zorla devreye sokar ve anksiyete krizini saniyeler içinde keser.',
+        description: 'Anksiyete krizini saniyeler içinde kesen biyolojik buton.',
         color: '#be123c', // Rose 700
         secondaryColor: '#f43f5e', // Rose 500
         accentColor: '#881337', // Rose 900
         pattern: { inhale: 7000, holdIn: 0, exhale: 11000, holdOut: 0 },
+        details: {
+            scientific: "Panik atak sırasında düşen karbondioksit seviyesini dengeler. Ekshalasyonun (nefes verme) inhalasyondan çok daha uzun olması, beynin 'tehlike geçti' sinyalini algılamasını zorunlu kılar.",
+            who: "Panik atak hastaları, sınav öncesi öğrenciler ve sahne korkusu yaşayanlar.",
+            benefits: "Kalp çarpıntısını anında durdurur, ellerdeki titremeyi geçirir ve kontrol hissini geri kazandırır."
+        }
     },
     {
         id: 'energy',
         title: 'Sabah Ateşi',
         subtitle: 'Hiper Oksijenasyon',
-        description: 'Yataktan roket gibi kalk. Kanındaki oksijeni tavan yaptırarak doğal bir espresso etkisi yarat.',
+        description: 'Doğal espresso etkisi yaratan oksijen yüklemesi.',
         color: '#d97706', // Amber 600
         secondaryColor: '#fbbf24', // Amber 400
         accentColor: '#78350f', // Amber 900
         pattern: { inhale: 4000, holdIn: 0, exhale: 2000, holdOut: 0 },
+        details: {
+            scientific: "Hücrelere giden oksijen miktarını artırarak mitokondriyal aktiviteyi (hücresel enerji üretimi) hızlandırır. Kan pH'ını hafifçe alkalize eder.",
+            who: "Sabahları 'ayılamayanlar', kronik yorgunluk hissedenler.",
+            benefits: "Letarji (uyuşukluk) halini ortadan kaldırır, metabolizmayı hızlandırır ve güne zinde başlamayı sağlar."
+        }
     },
     {
         id: 'balance',
         title: 'Kalp Rezonansı',
         subtitle: 'Biyolojik Tutarlılık',
-        description: 'Kalp ve beyni aynı frekansa kilitler. Stresi hücresel düzeyde yok eder ve duygusal dengeyi resetler.',
+        description: 'Kalp ve beyni aynı frekansa kilitleyen denge modu.',
         color: '#059669', // Emerald 600
         secondaryColor: '#34d399', // Emerald 400
         accentColor: '#064e3b', // Emerald 900
         pattern: { inhale: 5500, holdIn: 0, exhale: 5500, holdOut: 0 },
+        details: {
+            scientific: "Dakikada yaklaşık 5.5-6 nefeslik bu ritim, 0.1 Hz'lik rezonans frekansıdır. Bu frekansta kalp atış hızı değişkenliği (HRV) ile solunum tam bir uyum (koherans) içine girer.",
+            who: "Terapistler, travma sonrası stres yaşayanlar ve duygusal dalgalanma hissedenler.",
+            benefits: "Duygusal dayanıklılığı artırır, stresi hücresel düzeyde temizler ve içsel dengeyi sağlar."
+        }
     },
     {
         id: 'recovery',
         title: 'Taktiksel Onarım',
         subtitle: 'Performans Sonrası',
-        description: 'Ağır antrenman veya yoğun stres sonrası vücudu anında tamir moduna alır. Sporcuların toparlanma sırrı.',
+        description: 'Ağır aktivite sonrası vücudu tamir moduna alır.',
         color: '#7e22ce', // Purple 700
         secondaryColor: '#a855f7', // Purple 500
         accentColor: '#581c87', // Purple 900
         pattern: { inhale: 4000, holdIn: 2000, exhale: 4000, holdOut: 0 },
+        details: {
+            scientific: "Kaslardaki laktik asidin temizlenmesi için gereken oksijeni sağlarken, tutma süreleriyle kan basıncını dengeler. Vücudun anabolik (yapım/onarım) sürecini başlatır.",
+            who: "Profesyonel sporcular, yoğun antrenman yapanlar ve fiziksel işçiler.",
+            benefits: "Kas ağrılarını azaltır, toparlanma süresini hızlandırır ve egzersiz sonrası yorgunluğu hafifletir."
+        }
     },
     {
         id: 'apnea',
         title: 'CO2 Toleransı',
         subtitle: 'Dalgıç Ciğeri',
-        description: 'Akciğer kapasiteni insanüstü seviyeye zorla. Oksijen verimliliğini artırır ve zihinsel dayanıklılığı test eder.',
+        description: 'Akciğer kapasitesini ve oksijen verimliliğini artırır.',
         color: '#0f172a', // Slate 900
         secondaryColor: '#475569', // Slate 600
         accentColor: '#020617', // Slate 950
         pattern: { inhale: 5000, holdIn: 15000, exhale: 10000, holdOut: 5000 },
+        details: {
+            scientific: "Hipoksi (düşük oksijen) antrenmanı simülasyonudur. Vücudu yüksek karbondioksit seviyelerine alıştırarak oksijen kullanım verimliliğini (VO2 Max) artırır.",
+            who: "Serbest dalgıçlar, dağcılar ve dayanıklılık sporcuları.",
+            benefits: "Akciğer kapasitesini genişletir, nefes tutma süresini uzatır ve zorlu koşullarda zihinsel direnci artırır."
+        }
     }
 ];
 
@@ -684,26 +734,59 @@ function SessionView({ profile, onExit }: { profile: any, onExit: () => void }) 
                 <div style={{ width: 44 }}></div>
             </div>
 
-            {/* Main Visual Area */}
-            <div className="visual-area">
-                <div className="visual-stack">
-                    <BreathVisual 
-                        scale={scale} 
-                        duration={currentDuration} 
-                        color={profile.color}
-                        secondary={profile.secondaryColor}
-                        accent={profile.accentColor}
-                    />
-                    
-                    {/* Countdown Overlay */}
-                    <div className="countdown-overlay">
-                        <span key={secondsLeft} className="big-number">{secondsLeft}</span>
-                    </div>
-                </div>
+            {/* Content Container */}
+            <div className="content-area">
                 
-                <div className="status-text">
-                    <h2>{label}</h2>
+                {/* Visual Stack (Always Rendered, but blurred/covered when !isPlaying) */}
+                <div className={`visual-container ${!isPlaying ? 'blurred' : ''}`}>
+                    <div className="visual-stack">
+                        <BreathVisual 
+                            scale={scale} 
+                            duration={currentDuration} 
+                            color={profile.color}
+                            secondary={profile.secondaryColor}
+                            accent={profile.accentColor}
+                        />
+                        {/* Countdown Overlay (Only when playing) */}
+                        {isPlaying && (
+                            <div className="countdown-overlay">
+                                <span key={secondsLeft} className="big-number">{secondsLeft}</span>
+                            </div>
+                        )}
+                    </div>
+                    {isPlaying && (
+                        <div className="status-text">
+                            <h2>{label}</h2>
+                        </div>
+                    )}
                 </div>
+
+                {/* Info Overlay (Visible when Paused/Stopped) */}
+                {!isPlaying && (
+                    <div className="info-overlay">
+                        <div className="info-scroll-container">
+                             <div className="info-content">
+                                <section>
+                                    <h3 style={{ color: profile.secondaryColor }}>BİLİMSEL TEMEL</h3>
+                                    <p>{profile.details?.scientific || profile.description}</p>
+                                </section>
+                                
+                                <section>
+                                    <h3 style={{ color: profile.secondaryColor }}>KİMLER KULLANIR?</h3>
+                                    <p>{profile.details?.who || "Herkes için uygundur."}</p>
+                                </section>
+
+                                <section>
+                                    <h3 style={{ color: profile.secondaryColor }}>FAYDALARI</h3>
+                                    <p>{profile.details?.benefits || "Genel rahatlama sağlar."}</p>
+                                </section>
+                                {/* Extra padding for scroll visibility above button */}
+                                <div style={{ height: '100px' }}></div>
+                             </div>
+                        </div>
+                    </div>
+                )}
+
             </div>
 
             {/* Controls */}
@@ -711,7 +794,11 @@ function SessionView({ profile, onExit }: { profile: any, onExit: () => void }) 
                 <button 
                     className="play-btn" 
                     onClick={togglePlay}
-                    style={{ color: isPlaying ? '#000' : profile.color, background: isPlaying ? '#fff' : '#fff' }}
+                    style={{ 
+                        color: isPlaying ? '#000' : '#000', 
+                        background: '#fff',
+                        transform: isPlaying ? 'scale(1)' : 'scale(1.1)' 
+                    }}
                 >
                     {isPlaying ? <IconPause /> : <IconPlay />}
                 </button>
@@ -732,7 +819,8 @@ function SessionView({ profile, onExit }: { profile: any, onExit: () => void }) 
                     justify-content: space-between;
                     align-items: center;
                     padding: 2rem;
-                    z-index: 20;
+                    z-index: 30;
+                    background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
                 }
                 .icon-btn {
                     background: rgba(255,255,255,0.1);
@@ -746,6 +834,7 @@ function SessionView({ profile, onExit }: { profile: any, onExit: () => void }) 
                     justify-content: center;
                     cursor: pointer;
                     transition: transform 0.2s;
+                    backdrop-filter: blur(5px);
                 }
                 .icon-btn:active {
                     transform: scale(0.9);
@@ -759,14 +848,27 @@ function SessionView({ profile, onExit }: { profile: any, onExit: () => void }) 
                     opacity: 0.9;
                 }
 
-                .visual-area {
+                .content-area {
                     flex: 1;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                /* Visual Container */
+                .visual-container {
+                    position: absolute;
+                    inset: 0;
                     display: flex;
                     flex-direction: column;
                     align-items: center;
                     justify-content: center;
-                    position: relative;
+                    transition: all 0.5s ease;
                 }
+                .visual-container.blurred {
+                    filter: blur(12px) brightness(0.6);
+                    transform: scale(0.95);
+                }
+
                 .visual-stack {
                     position: relative;
                     width: 320px;
@@ -806,15 +908,68 @@ function SessionView({ profile, onExit }: { profile: any, onExit: () => void }) 
                     text-transform: uppercase;
                 }
 
+                /* Info Overlay */
+                .info-overlay {
+                    position: absolute;
+                    inset: 0;
+                    z-index: 20;
+                    display: flex;
+                    flex-direction: column;
+                    animation: fadeIn 0.4s ease-out;
+                    background: rgba(0,0,0,0.2); /* Slight darkening */
+                }
+                .info-scroll-container {
+                    flex: 1;
+                    overflow-y: auto;
+                    padding: 1rem 2rem;
+                    /* Custom Scrollbar hide */
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
+                .info-scroll-container::-webkit-scrollbar {
+                    display: none;
+                }
+                .info-content {
+                    max-width: 600px;
+                    margin: 0 auto;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 2rem;
+                    padding-top: 1rem;
+                }
+                .info-content section {
+                    animation: slideUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+                }
+                .info-content section:nth-child(1) { animation-delay: 0.1s; }
+                .info-content section:nth-child(2) { animation-delay: 0.2s; }
+                .info-content section:nth-child(3) { animation-delay: 0.3s; }
+
+                .info-content h3 {
+                    font-size: 0.85rem;
+                    font-weight: 800;
+                    letter-spacing: 2px;
+                    margin-bottom: 0.5rem;
+                    text-transform: uppercase;
+                    opacity: 0.9;
+                }
+                .info-content p {
+                    font-size: 1.1rem;
+                    line-height: 1.6;
+                    color: rgba(255,255,255,0.9);
+                    font-weight: 500;
+                    margin: 0;
+                }
+
                 .controls-area {
-                    padding: 3rem;
+                    padding: 2rem;
                     display: flex;
                     justify-content: center;
-                    padding-bottom: 4rem;
+                    padding-bottom: 3rem;
+                    z-index: 40; /* Above everything */
                 }
                 .play-btn {
-                    width: 90px;
-                    height: 90px;
+                    width: 80px;
+                    height: 80px;
                     border-radius: 50%;
                     border: none;
                     font-size: 1.5rem;
@@ -823,7 +978,7 @@ function SessionView({ profile, onExit }: { profile: any, onExit: () => void }) 
                     align-items: center;
                     justify-content: center;
                     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-                    transition: transform 0.2s;
+                    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
                 }
                 .play-btn:active {
                     transform: scale(0.92);
@@ -832,6 +987,11 @@ function SessionView({ profile, onExit }: { profile: any, onExit: () => void }) 
                 @keyframes popIn {
                     from { transform: scale(0.5); opacity: 0; }
                     to { transform: scale(1); opacity: 1; }
+                }
+                @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+                @keyframes slideUp { 
+                    from { opacity: 0; transform: translateY(20px); } 
+                    to { opacity: 1; transform: translateY(0); } 
                 }
             `}</style>
         </div>
