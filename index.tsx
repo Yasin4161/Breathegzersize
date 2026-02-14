@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { createRoot } from 'react-dom/client';
 import { GoogleGenAI } from '@google/genai'; 
@@ -14,7 +13,7 @@ interface BreathProfile {
     description: string;
     color: string;
     secondaryColor: string;
-    accentColor: string; // For 2D shading
+    accentColor: string;
     pattern: {
         inhale: number;
         holdIn: number;
@@ -33,6 +32,16 @@ const PROFILES: BreathProfile[] = [
         secondaryColor: '#6366f1', // Indigo 500
         accentColor: '#312e81', // Indigo 900
         pattern: { inhale: 4000, holdIn: 7000, exhale: 8000, holdOut: 0 },
+    },
+    {
+        id: 'voltage',
+        title: 'Yüksek Voltaj',
+        subtitle: '6-2 Güç Döngüsü',
+        description: 'Kafeinsiz enerji patlaması. Uzun ve derin bir nefesten sonra aniden havayı boşaltarak sinir sistemini ateşle.',
+        color: '#eab308', // Yellow 600
+        secondaryColor: '#facc15', // Yellow 400
+        accentColor: '#854d0e', // Yellow 800
+        pattern: { inhale: 6000, holdIn: 0, exhale: 2000, holdOut: 0 },
     },
     {
         id: 'focus',
@@ -96,7 +105,7 @@ const PROFILES: BreathProfile[] = [
     }
 ];
 
-// --- Audio Engine (Synthesized Wind/Breath) ---
+// --- Audio Engine ---
 
 class BreathAudioEngine {
     ctx: AudioContext | null = null;
@@ -104,10 +113,6 @@ class BreathAudioEngine {
     gainNode: GainNode | null = null;
     filterNode: BiquadFilterNode | null = null;
     isPlaying: boolean = false;
-
-    constructor() {
-        // Initialize on user interaction
-    }
 
     init() {
         if (!this.ctx) {
@@ -117,16 +122,15 @@ class BreathAudioEngine {
 
     createNoiseBuffer() {
         if (!this.ctx) return null;
-        const bufferSize = this.ctx.sampleRate * 2; // 2 seconds of noise loop
+        const bufferSize = this.ctx.sampleRate * 2;
         const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
         const data = buffer.getChannelData(0);
         let lastOut = 0;
         for (let i = 0; i < bufferSize; i++) {
-            // Pink noise approximation
             const white = Math.random() * 2 - 1;
             data[i] = (lastOut + (0.02 * white)) / 1.02;
             lastOut = data[i];
-            data[i] *= 3.5; // Compensate for gain loss
+            data[i] *= 3.5;
         }
         return buffer;
     }
@@ -137,7 +141,6 @@ class BreathAudioEngine {
 
         if (this.isPlaying) return;
 
-        // Resume context if suspended (browser policy)
         if (this.ctx.state === 'suspended') {
             this.ctx.resume();
         }
@@ -177,30 +180,25 @@ class BreathAudioEngine {
         const now = this.ctx.currentTime;
         const duration = durationMs / 1000;
 
-        // Reset any scheduled ramps
         this.gainNode.gain.cancelScheduledValues(now);
         this.filterNode.frequency.cancelScheduledValues(now);
 
         if (phase === 'inhale') {
-            // Volume Up, Freq Up (Wind rushing in)
             this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, now);
             this.gainNode.gain.linearRampToValueAtTime(0.8, now + duration);
 
             this.filterNode.frequency.setValueAtTime(this.filterNode.frequency.value, now);
             this.filterNode.frequency.exponentialRampToValueAtTime(1200, now + duration);
         } else if (phase === 'exhale') {
-            // Volume Down, Freq Down (Wind rushing out)
             this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, now);
             this.gainNode.gain.linearRampToValueAtTime(0.0, now + duration);
 
             this.filterNode.frequency.setValueAtTime(this.filterNode.frequency.value, now);
             this.filterNode.frequency.exponentialRampToValueAtTime(100, now + duration);
         } else if (phase === 'hold-in') {
-             // Slight silence or hum
              this.gainNode.gain.linearRampToValueAtTime(0.1, now + 0.5);
              this.filterNode.frequency.linearRampToValueAtTime(200, now + 0.5);
         } else if (phase === 'hold-out') {
-             // Silence
              this.gainNode.gain.linearRampToValueAtTime(0, now + 0.2);
         }
     }
@@ -427,7 +425,7 @@ function MenuView({ onSelect }: { onSelect: (p: BreathProfile) => void }) {
     );
 }
 
-// --- Visual Component (2D Flat Vector Art) ---
+// --- Visual Component ---
 
 const BreathVisual = ({ 
     scale, 
@@ -442,16 +440,12 @@ const BreathVisual = ({
     secondary: string,
     accent: string 
 }) => {
-    // We create a layered "flower" or "blob" effect using CSS shapes.
-    // This simulates 2D vector art with hard shadows.
-
     const transitionStyle = {
         transition: `transform ${duration}ms cubic-bezier(0.4, 0.0, 0.2, 1)`,
     };
 
     return (
         <div className="visual-wrapper">
-            {/* Layer 3: Back Shadow (Darkest) */}
             <div 
                 className="blob layer-3" 
                 style={{
@@ -460,7 +454,6 @@ const BreathVisual = ({
                     backgroundColor: accent,
                 }}
             />
-            {/* Layer 2: Mid Tone (Secondary) */}
             <div 
                 className="blob layer-2" 
                 style={{
@@ -469,7 +462,6 @@ const BreathVisual = ({
                     backgroundColor: secondary,
                 }}
             />
-            {/* Layer 1: Main Shape (Primary Color) */}
             <div 
                 className="blob layer-1" 
                 style={{
@@ -478,7 +470,6 @@ const BreathVisual = ({
                     backgroundColor: color,
                 }}
             >
-                {/* Optional: Simple shine effect for 2D feel */}
                 <div className="shine"></div>
             </div>
 
@@ -497,16 +488,10 @@ const BreathVisual = ({
                     height: 100%;
                     border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
                     will-change: transform;
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.2); /* Soft shadow for depth */
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
                 }
-                .layer-3 {
-                    opacity: 0.4;
-                    filter: blur(2px);
-                }
-                .layer-2 {
-                    width: 95%;
-                    height: 95%;
-                }
+                .layer-3 { opacity: 0.4; filter: blur(2px); }
+                .layer-2 { width: 95%; height: 95%; }
                 .layer-1 {
                     width: 90%;
                     height: 90%;
@@ -537,20 +522,17 @@ function SessionView({ profile, onExit }: { profile: BreathProfile, onExit: () =
     const [isPlaying, setIsPlaying] = useState(false);
     const [phase, setPhase] = useState<BreathPhase>('inhale');
     const [label, setLabel] = useState('Hazır?');
-    const [scale, setScale] = useState(0.5); // Start smaller
-    const [secondsLeft, setSecondsLeft] = useState(0); // Countdown state
+    const [scale, setScale] = useState(0.5); 
+    const [secondsLeft, setSecondsLeft] = useState(0); 
     
-    // Logic refs
     const timerRef = useRef<number | null>(null);
     const countdownIntervalRef = useRef<number | null>(null);
     const phaseIndexRef = useRef(0);
     
-    // Visual constants
     const MIN_SCALE = 0.6;
     const MAX_SCALE = 1.0;
 
     useEffect(() => {
-        // Initialize Audio context on mount (suspended state usually)
         audioEngine.init();
         return () => {
             clearTimers();
@@ -588,7 +570,6 @@ function SessionView({ profile, onExit }: { profile: BreathProfile, onExit: () =
         const pIndex = phaseIndexRef.current;
         const duration = getPhaseDuration(pIndex);
 
-        // Skip 0 duration phases
         if (duration <= 0) {
             phaseIndexRef.current = (pIndex + 1) % 4;
             startPhase();
@@ -597,16 +578,13 @@ function SessionView({ profile, onExit }: { profile: BreathProfile, onExit: () =
 
         const config = getPhaseConfig(pIndex);
         
-        // Update State
         setPhase(config.type as BreathPhase);
         setLabel(config.label);
         setScale(config.targetScale);
         setSecondsLeft(Math.ceil(duration / 1000));
 
-        // Audio Trigger
         audioEngine.triggerPhase(config.type as BreathPhase, duration);
 
-        // Countdown Interval
         let remaining = duration;
         const startTime = Date.now();
         
@@ -618,7 +596,6 @@ function SessionView({ profile, onExit }: { profile: BreathProfile, onExit: () =
             if (left >= 0) setSecondsLeft(left);
         }, 100);
 
-        // Next Phase Timer
         timerRef.current = window.setTimeout(() => {
             phaseIndexRef.current = (pIndex + 1) % 4;
             startPhase();
@@ -627,15 +604,13 @@ function SessionView({ profile, onExit }: { profile: BreathProfile, onExit: () =
 
     const togglePlay = () => {
         if (isPlaying) {
-            // Pause
             setIsPlaying(false);
             clearTimers();
             setLabel('DURAKLATILDI');
-            audioEngine.stopNoise(); // Stop sound on pause
+            audioEngine.stopNoise();
         } else {
-            // Play
             setIsPlaying(true);
-            audioEngine.startNoise(); // Enable engine
+            audioEngine.startNoise();
             startPhase();
         }
     };
@@ -644,7 +619,6 @@ function SessionView({ profile, onExit }: { profile: BreathProfile, onExit: () =
 
     return (
         <div className="session-container" style={{ background: '#000' }}>
-            {/* Header */}
             <div className="session-header">
                 <button className="icon-btn" onClick={onExit}>
                     <IconChevronLeft />
@@ -655,7 +629,6 @@ function SessionView({ profile, onExit }: { profile: BreathProfile, onExit: () =
                 <div style={{ width: 44 }}></div>
             </div>
 
-            {/* Main Visual Area */}
             <div className="visual-area">
                 <div className="visual-stack">
                     <BreathVisual 
@@ -666,7 +639,6 @@ function SessionView({ profile, onExit }: { profile: BreathProfile, onExit: () =
                         accent={profile.accentColor}
                     />
                     
-                    {/* Countdown Overlay */}
                     <div className="countdown-overlay">
                         <span key={secondsLeft} className="big-number">{secondsLeft}</span>
                     </div>
@@ -677,7 +649,6 @@ function SessionView({ profile, onExit }: { profile: BreathProfile, onExit: () =
                 </div>
             </div>
 
-            {/* Controls */}
             <div className="controls-area">
                 <button 
                     className="play-btn" 
