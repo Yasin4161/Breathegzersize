@@ -16,6 +16,26 @@ const PROFILES = [
         pattern: { inhale: 4000, holdIn: 7000, exhale: 8000, holdOut: 0 },
     },
     {
+        id: 'vagus',
+        title: 'Vagus Masajı',
+        subtitle: 'Biyolojik Fren',
+        description: 'Otonom sinir sistemine "Acil durum bitti" emri. Vagus sinirini uyararak kalp atışını yavaşlatır ve kortizolü temizler.',
+        color: '#0d9488', // Teal 600
+        secondaryColor: '#5eead4', // Teal 300
+        accentColor: '#134e4a', // Teal 900
+        pattern: { inhale: 4000, holdIn: 0, exhale: 8000, holdOut: 0 },
+    },
+    {
+        id: 'zen',
+        title: 'Zen Transı',
+        subtitle: 'Zihinsel Susturucu',
+        description: 'Beyin dalgalarını yavaşlatır. Kan gazı dengesini manipüle ederek zihni "Düşüncesizlik" (trans) moduna alır.',
+        color: '#db2777', // Pink 600
+        secondaryColor: '#f472b6', // Pink 400
+        accentColor: '#831843', // Pink 900
+        pattern: { inhale: 4000, holdIn: 4000, exhale: 8000, holdOut: 0 },
+    },
+    {
         id: 'focus',
         title: 'Navy SEALs',
         subtitle: 'Kutu Nefesi',
