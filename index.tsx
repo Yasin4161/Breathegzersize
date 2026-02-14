@@ -1,29 +1,10 @@
-
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import { GoogleGenAI } from '@google/genai'; 
 
-// --- Types & Data ---
+// --- Data ---
 
-type BreathPhase = 'inhale' | 'hold-in' | 'exhale' | 'hold-out';
-
-interface BreathProfile {
-    id: string;
-    title: string;
-    subtitle: string;
-    description: string;
-    color: string;
-    secondaryColor: string;
-    accentColor: string; // For 2D shading
-    pattern: {
-        inhale: number;
-        holdIn: number;
-        exhale: number;
-        holdOut: number;
-    };
-}
-
-const PROFILES: BreathProfile[] = [
+const PROFILES = [
     {
         id: 'sleep',
         title: 'Derin Uyku',
@@ -109,19 +90,25 @@ const PROFILES: BreathProfile[] = [
 // --- Audio Engine (Synthesized Wind/Breath) ---
 
 class BreathAudioEngine {
-    ctx: AudioContext | null = null;
-    noiseNode: AudioBufferSourceNode | null = null;
-    gainNode: GainNode | null = null;
-    filterNode: BiquadFilterNode | null = null;
-    isPlaying: boolean = false;
+    ctx: AudioContext | null;
+    noiseNode: AudioBufferSourceNode | null;
+    gainNode: GainNode | null;
+    filterNode: BiquadFilterNode | null;
+    isPlaying: boolean;
 
     constructor() {
-        // Initialize on user interaction
+        this.ctx = null;
+        this.noiseNode = null;
+        this.gainNode = null;
+        this.filterNode = null;
+        this.isPlaying = false;
     }
 
     init() {
         if (!this.ctx) {
-            this.ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+            // Handle browser prefixes
+            const AudioCtor = window.AudioContext || (window as any).webkitAudioContext;
+            this.ctx = new AudioCtor();
         }
     }
 
@@ -149,10 +136,12 @@ class BreathAudioEngine {
 
         // Resume context if suspended (browser policy)
         if (this.ctx.state === 'suspended') {
-            this.ctx.resume();
+            this.ctx.resume().catch(e => console.error(e));
         }
 
         const buffer = this.createNoiseBuffer();
+        if (!buffer) return;
+
         this.noiseNode = this.ctx.createBufferSource();
         this.noiseNode.buffer = buffer;
         this.noiseNode.loop = true;
@@ -174,44 +163,54 @@ class BreathAudioEngine {
 
     stopNoise() {
         if (this.noiseNode) {
-            this.noiseNode.stop();
-            this.noiseNode.disconnect();
+            try {
+                this.noiseNode.stop();
+                this.noiseNode.disconnect();
+            } catch(e) {}
             this.noiseNode = null;
         }
         this.isPlaying = false;
     }
 
-    triggerPhase(phase: BreathPhase, durationMs: number) {
+    triggerPhase(phase: string, durationMs: number) {
         if (!this.ctx || !this.gainNode || !this.filterNode) return;
 
         const now = this.ctx.currentTime;
         const duration = durationMs / 1000;
 
         // Reset any scheduled ramps
-        this.gainNode.gain.cancelScheduledValues(now);
-        this.filterNode.frequency.cancelScheduledValues(now);
+        try {
+            this.gainNode.gain.cancelScheduledValues(now);
+            this.filterNode.frequency.cancelScheduledValues(now);
+        } catch(e) {}
+
+        // Anchor current values
+        const currentGain = this.gainNode.gain.value;
+        this.gainNode.gain.setValueAtTime(currentGain, now);
+        this.filterNode.frequency.setValueAtTime(this.filterNode.frequency.value, now);
 
         if (phase === 'inhale') {
-            // Volume Up, Freq Up (Wind rushing in)
-            this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, now);
-            this.gainNode.gain.linearRampToValueAtTime(0.8, now + duration);
+            // INHALE: Rising intensity and pitch
+            // Smooth ramp up
+            this.gainNode.gain.linearRampToValueAtTime(0.6, now + duration);
+            this.filterNode.frequency.exponentialRampToValueAtTime(800, now + duration);
 
-            this.filterNode.frequency.setValueAtTime(this.filterNode.frequency.value, now);
-            this.filterNode.frequency.exponentialRampToValueAtTime(1200, now + duration);
-        } else if (phase === 'exhale') {
-            // Volume Down, Freq Down (Wind rushing out)
-            this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, now);
-            this.gainNode.gain.linearRampToValueAtTime(0.0, now + duration);
-
-            this.filterNode.frequency.setValueAtTime(this.filterNode.frequency.value, now);
-            this.filterNode.frequency.exponentialRampToValueAtTime(100, now + duration);
         } else if (phase === 'hold-in') {
-             // Slight silence or hum
-             this.gainNode.gain.linearRampToValueAtTime(0.1, now + 0.5);
-             this.filterNode.frequency.linearRampToValueAtTime(200, now + 0.5);
+             // HOLD IN: Steady drone, representing fullness
+             // Maintain volume but stabilize frequency
+             this.gainNode.gain.linearRampToValueAtTime(0.25, now + 0.5); // Slightly lower than peak inhale
+             this.filterNode.frequency.linearRampToValueAtTime(300, now + 0.5); // Steady pressure hum
+
+        } else if (phase === 'exhale') {
+            // EXHALE: Reverse of inhale (Falling intensity)
+            // Starts from wherever it is (high if holding in, low if holding out) and goes to 0
+            this.gainNode.gain.linearRampToValueAtTime(0.0, now + duration);
+            this.filterNode.frequency.exponentialRampToValueAtTime(100, now + duration);
+
         } else if (phase === 'hold-out') {
-             // Silence
-             this.gainNode.gain.linearRampToValueAtTime(0, now + 0.2);
+             // HOLD OUT: Very subtle presence (Empty lung feeling)
+             this.gainNode.gain.linearRampToValueAtTime(0.05, now + 0.2); 
+             this.filterNode.frequency.linearRampToValueAtTime(100, now + 0.2);
         }
     }
 }
@@ -242,7 +241,7 @@ const IconChevronLeft = () => (
 // --- Components ---
 
 function App() {
-    const [activeProfile, setActiveProfile] = useState<BreathProfile | null>(null);
+    const [activeProfile, setActiveProfile] = useState(null);
 
     return (
         <div style={{ width: '100%', height: '100%', background: '#09090b' }}>
@@ -263,7 +262,7 @@ function App() {
 
 // --- Menu View ---
 
-function formatPattern(pattern: BreathProfile['pattern']): string {
+function formatPattern(pattern: any) {
     const parts = [];
     parts.push(`AL: ${pattern.inhale / 1000}sn`);
     if (pattern.holdIn > 0) parts.push(`TUT: ${pattern.holdIn / 1000}sn`);
@@ -272,7 +271,7 @@ function formatPattern(pattern: BreathProfile['pattern']): string {
     return parts.join(' • ');
 }
 
-function MenuView({ onSelect }: { onSelect: (p: BreathProfile) => void }) {
+function MenuView({ onSelect }: { onSelect: (profile: any) => void }) {
     return (
         <div className="menu-container">
             <header className="menu-header">
@@ -449,7 +448,7 @@ const BreathVisual = ({
     scale: number, 
     duration: number, 
     color: string, 
-    secondary: string,
+    secondary: string, 
     accent: string 
 }) => {
     // We create a layered "flower" or "blob" effect using CSS shapes.
@@ -543,9 +542,9 @@ const BreathVisual = ({
 
 // --- Session View ---
 
-function SessionView({ profile, onExit }: { profile: BreathProfile, onExit: () => void }) {
+function SessionView({ profile, onExit }: { profile: any, onExit: () => void }) {
     const [isPlaying, setIsPlaying] = useState(false);
-    const [phase, setPhase] = useState<BreathPhase>('inhale');
+    const [phase, setPhase] = useState('inhale');
     const [label, setLabel] = useState('Hazır?');
     const [scale, setScale] = useState(0.5); // Start smaller
     const [secondsLeft, setSecondsLeft] = useState(0); // Countdown state
@@ -608,13 +607,13 @@ function SessionView({ profile, onExit }: { profile: BreathProfile, onExit: () =
         const config = getPhaseConfig(pIndex);
         
         // Update State
-        setPhase(config.type as BreathPhase);
+        setPhase(config.type);
         setLabel(config.label);
         setScale(config.targetScale);
         setSecondsLeft(Math.ceil(duration / 1000));
 
         // Audio Trigger
-        audioEngine.triggerPhase(config.type as BreathPhase, duration);
+        audioEngine.triggerPhase(config.type, duration);
 
         // Countdown Interval
         let remaining = duration;
