@@ -45,6 +45,16 @@ const PROFILES: BreathProfile[] = [
         pattern: { inhale: 4000, holdIn: 4000, exhale: 4000, holdOut: 4000 },
     },
     {
+        id: 'voltage',
+        title: 'Yüksek Voltaj',
+        subtitle: '6-2 Güç Döngüsü',
+        description: 'Kafeinsiz enerji patlaması. Hızlı boşaltım ve derin dolum ile sinir sistemini elektriklendir.',
+        color: '#eab308', // Yellow 600
+        secondaryColor: '#facc15', // Yellow 400
+        accentColor: '#854d0e', // Yellow 800
+        pattern: { inhale: 6000, holdIn: 0, exhale: 2000, holdOut: 0 },
+    },
+    {
         id: 'panic',
         title: 'Panik Reset',
         subtitle: '7-11 Tekniği',
